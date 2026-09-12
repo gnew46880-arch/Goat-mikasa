@@ -14,17 +14,7 @@ module.exports = {
   },
 
   // Awesome, natural Banglish random messages
-  randomCallMessages: [
-    "Arey mama, amake dakla ken? 🤔 Kono dorkar asilo naki?",
-    "Ki re mama! 😎 Orko হাজির! Bolo ki help lagbe.",
-    "Haan boss, shunsi toh! 🤙 Ki kora jay bolo?",
-    "Arey mama, evabe daan-bam theke dakcho ken? 😂 Ki obostha?",
-    "Bolo mama! 🚀 Tomar ki obostha, ki niye kotha bolba?",
-    "Orko চলে এসেছে! 🎯 Ki shombad bolo mama?",
-    "Haan re mama, bolo ki shomossha? 😌",
-    "Ami ekhanei ashi mama! 🦾 Ki kaj bolte hobe?",
-    "Dak shunlam mama! ⚡ Ki kora lagbe ekhon?",
-    "Bolo boss, ki khabor? 💻 Shob thikthak toh?","আমাকে না দেকে একটু পড়তেও বসতে তো পারো 🥺🥺",
+  randomCallMessages: ["আমাকে না দেকে একটু পড়তেও বসতে তো পারো 🥺🥺",
                 "তোর বিয়ে হয় নি 𝗕𝗯𝘆 হইলো কিভাবে,,🙄", "আজ একটা ফোন নাই বলে রিপ্লাই দিতে পারলাম না_🙄",
                 "চৌধুরী সাহেব আমি গরিব হতে পারি😾🤭 -কিন্তু বড়লোক না🥹 😫", "আমি অন্যের জিনিসের সাথে কথা বলি না__😏ওকে",
                 "বলো কি বলবা, সবার সামনে বলবা নাকি?🤭🤏", "ভুলে জাও আমাকে 😞😞", "দেখা হলে কাঠগোলাপ দিও..🤗",
