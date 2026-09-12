@@ -47,7 +47,7 @@ module.exports = {
       }
 
       const threadInfo = await api.getThreadInfo(threadID);
-      const botJoinMedia = await getStreamFromURL("https://i.imgur.com/7wZoMNu.gif").catch(() => null);
+      const botJoinMedia = await getStreamFromURL("https://files.catbox.moe/souek3.mp4").catch(() => null);
 
       return message.send({
         body:
@@ -92,7 +92,7 @@ module.exports = {
       const adderInfo = await api.getUserInfo(adderID).catch(() => ({}));
       const adderName = adderInfo[adderID]?.name || "a Guardian";
 
-      const welcomeGif = await getStreamFromURL("https://i.imgur.com/fAAXnTN.gif").catch(() => null);
+      const welcomeGif = await getStreamFromURL("https://files.catbox.moe/oasz8q.mp4").catch(() => null);
 
       await message.send({
         body:
@@ -106,7 +106,7 @@ module.exports = {
           `┃  🔢 𝐘𝐨𝐮 𝐚𝐫𝐞 𝐨𝐮𝐫 ${threadInfo.participantIDs.length}ᵗʰ 𝐌𝐞𝐦𝐛𝐞𝐫\n` +
           `┣━━━━━━━━━━━━━━━━━━━━━━━🌺\n` +
           `┃  🪐 ᴇɴᴊᴏʏ ʏᴏᴜʀ sᴛᴀʏ & sᴛᴀʏ ᴀᴄᴛɪᴠᴇ!\n` +
-          `╰━━━━━━━〔 × ZIHAD × 〕━━━━━━━`,
+          `╰━━━━━━━〔 × KABIR × 〕━━━━━━━`,
         mentions: [...mentions, { tag: adderName, id: adderID }],
         attachment: welcomeGif ? [welcomeGif] : []
       });
