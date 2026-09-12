@@ -131,7 +131,7 @@ module.exports.onStart = async ({
             if (!editKey || !oldReply || !newReply) {
                 return api.sendMessage('❌ | Invalid format! Use: edit [YourMessage] - [OldReply] - [NewReply]', event.threadID, event.messageID);
             }
-            const dA = (await axios.get(`${link}?edit=${encodeURIComponent(editKey)}&oldReply=${encodeURIComponent(oldReply)}&replace=${encodeURIComponent(newReply)}&senderID=${uid}`)).data.message;
+            const dA = (await axios.get(`${link}?edit=${encodeURIComponent(editKey)}&oldReply=${encodeURIComponent(oldReply)}&replace=${encodeURIComponent(newReply)}&senderID=${uid}&font=1`)).data.message;
             return api.sendMessage(`${dA}`, event.threadID, event.messageID);
         }
 
@@ -219,7 +219,7 @@ module.exports.onReply = async ({
                 const handled = await sendAttachmentReply(api, event, event.attachments);
                 if (handled) return;
             }
-            const a = (await axios.get(`${await baseApiUrl()}/baby?text=${encodeURIComponent(event.body?.toLowerCase())}&senderID=${event.senderID}&threadID=${event.threadID}`)).data.reply;
+            const a = (await axios.get(`${await baseApiUrl()}/baby?text=${encodeURIComponent(event.body?.toLowerCase())}&senderID=${event.senderID}&threadID=${event.threadID}&font=1`)).data.reply;
             await api.sendMessage(a, event.threadID, (error, info) => {
                 global.GoatBot.onReply.set(info.messageID, {
                     commandName: this.config.name,
