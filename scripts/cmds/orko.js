@@ -2,7 +2,7 @@ const axios = require("axios");
 
 module.exports = {
   config: {
-    name: "orko",
+    name: "mikasa",
     version: "1.4",
     author: "Zihad Ahmed",
     countDown: 3,
@@ -155,7 +155,7 @@ module.exports = {
           (err, info) => {
             if (!err) {
               global.GoatBot.onReply.set(info.messageID, {
-                commandName: "orko",
+                commandName: "mikasa",
                 type: "reply",
                 messageID: info.messageID,
                 author: event.senderID,
@@ -178,7 +178,7 @@ module.exports = {
     
     // Check if the reply is intended for Orko
     const replyTarget = global.GoatBot.onReply.get(event.messageReply.messageID);
-    if (!replyTarget || replyTarget.commandName !== "orko") return;
+    if (!replyTarget || replyTarget.commandName !== "mikasa") return;
 
     const query = event.body?.trim();
     if (!query) return;
