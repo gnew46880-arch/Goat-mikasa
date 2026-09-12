@@ -1,98 +1,84 @@
-const { getTime, drive } = global.utils;
+const { getTime, getStreamFromURL } = global.utils;
 
 module.exports = {
-	config: {
-		name: "leave",
-		version: "1.4",
-		author: "NTKhang",
-		category: "events"
-	},
+    config: {
+        name: "leave",
+        version: "3.0",
+        author: "SAIF (Modified By ♡—͟͞͞ᴛꫝ֟፝ؖ۬ᴍɪᴍ ⸙)",
+        category: "events"
+    },
 
-	langs: {
-		vi: {
-			session1: "sáng",
-			session2: "trưa",
-			session3: "chiều",
-			session4: "tối",
-			leaveType1: "tự rời",
-			leaveType2: "bị kick",
-			defaultLeaveMessage: "{userName} đã {type} khỏi nhóm"
-		},
-		en: {
-			session1: "morning",
-			session2: "noon",
-			session3: "afternoon",
-			session4: "evening",
-			leaveType1: "left",
-			leaveType2: "was kicked from",
-			defaultLeaveMessage: "{userName} {type} the group"
-		}
-	},
+    langs: {  
+        vi: {  
+            session1: "🌅 Buổi Sáng",  
+            session2: "☀️ Buổi Trưa",  
+            session3: "🌤️ Buổi Chiều",  
+            session4: "🌙 Buổi Tối",  
+            leaveType1: "🚪 Tự rời khỏi nhóm",  
+            leaveType2: "⚒️ Bị Admin sa thải",  
+            defaultLeaveMessage: "╭━━━〔 💠 𝐋𝐄𝐀𝐕𝐄 𝐍𝐎𝐓𝐈𝐅𝐘 💠 〕━━━\n┃\n┃  ✨ 𝐍𝐚𝐦𝐞: {userName}\n┃  📝 𝐒𝐭𝐚𝐭𝐮𝐬: {type}\n┃  🕒 𝐓𝐢𝐦𝐞: {time}\n┃  🌤️ 𝐒𝐞𝐬𝐬𝐢𝐨𝐧: {session}\n┃  🌟 𝐆𝐫𝐨𝐮𝐩: {threadName}\n┃\n┃  💌 𝐂𝐚̉𝐦 𝐨̛𝐧 𝐛𝐚̣𝐧 đ𝐚̃ đ𝐨̂̀𝐧𝐠 𝐡𝐚̀𝐧𝐡!\n╰━━━━━━━━━━━━━━━━━━━━━━━🌺"
+        },
+        en: {
+            session1: "🌅 𝐌𝐨𝐫𝐧𝐢𝐧𝐠",
+            session2: "☀️ 𝐍𝐨𝐨𝐧",
+            session3: "🌇 𝐀𝐟𝐭𝐞𝐫𝐧𝐨𝐨𝐧",
+            session4: "🌃 𝐍𝐢𝐠𝐡𝐭",
+            leaveType1: "🚪 𝐒𝐞𝐥𝐟-𝐋𝐞𝐟𝐭",
+            leaveType2: "⚒️ 𝐊𝐢𝐜𝐤𝐞𝐝 𝐛𝐲 𝐀𝐝𝐦𝐢𝐧",
+            defaultLeaveMessage: "╭━━━〔 𝐆𝐎𝐎𝐃 𝐁𝐘𝐄 〕━━━\n┃  💔 𝐒𝐚𝐝 𝐭𝐨 𝐬𝐞𝐞 𝐲𝐨𝐮 𝐠𝐨...\n┣━━━━━━━━━━━━━━━🌺\n┃  👤 𝐔𝐬𝐞𝐫: {userName}\n┃  📊 𝐄𝐯𝐞𝐧𝐭: {type}\n┃  ⏰ 𝐓𝐢𝐦𝐞: {time}\n┃  🌆 𝐏𝐡𝐚𝐬𝐞: {session}\n┃  🛡️ 𝐆𝐫𝐨𝐮𝐩: {threadName}\n┣━━━━━━━━━━━━━━━🌺\n┃  👋 𝐖𝐞 𝐰𝐢𝐬𝐡 𝐲𝐨𝐮 𝐭𝐡𝐞 𝐛𝐞𝐬𝐭 𝐥𝐮𝐜𝐤!\n╰━━━〔  ✨  〕━━━"
+        }
+    },
 
-	onStart: async ({ threadsData, message, event, api, usersData, getLang }) => {
-		if (event.logMessageType == "log:unsubscribe")
-			return async function () {
-				const { threadID } = event;
-				const threadData = await threadsData.get(threadID);
-				if (!threadData?.settings?.sendLeaveMessage)
-					return;
-				const { leftParticipantFbId } = event.logMessageData;
-				if (leftParticipantFbId == api.getCurrentUserID())
-					return;
-				const hours = getTime("HH");
+    onStart: async ({ threadsData, message, event, api, usersData, getLang }) => {  
+        if (event.logMessageType !== "log:unsubscribe") return;  
 
-				const threadName = threadData.threadName;
-				const userName = await usersData.getName(leftParticipantFbId);
+        const { threadID } = event;  
+        const threadData = await threadsData.get(threadID);  
+        
+        // Auto-enable if not set, or return if disabled
+        if (!threadData.settings.sendLeaveMessage) return;  
 
-				// {userName}   : name of the user who left the group
-				// {type}       : type of the message (leave)
-				// {boxName}    : name of the box
-				// {threadName} : name of the box
-				// {time}       : time
-				// {session}    : session
+        const { leftParticipantFbId } = event.logMessageData;  
+        if (leftParticipantFbId == api.getCurrentUserID()) return;  
 
-				let { leaveMessage = getLang("defaultLeaveMessage") } = threadData.data;
-				const form = {
-					mentions: leaveMessage.match(/\{userNameTag\}/g) ? [{
-						tag: userName,
-						id: leftParticipantFbId
-					}] : null
-				};
+        const timeNow = getTime("HH:mm:ss");  
+        const currentHour = parseInt(timeNow.split(":")[0]);  
+        const threadName = threadData.threadName || "Unknown Group";  
+        const userName = await usersData.getName(leftParticipantFbId) || "User";  
 
-				leaveMessage = leaveMessage
-					.replace(/\{userName\}|\{userNameTag\}/g, userName)
-					.replace(/\{type\}/g, leftParticipantFbId == event.author ? getLang("leaveType1") : getLang("leaveType2"))
-					.replace(/\{threadName\}|\{boxName\}/g, threadName)
-					.replace(/\{time\}/g, hours)
-					.replace(/\{session\}/g, hours <= 10 ?
-						getLang("session1") :
-						hours <= 12 ?
-							getLang("session2") :
-							hours <= 18 ?
-								getLang("session3") :
-								getLang("session4")
-					);
+        const isKicked = leftParticipantFbId != event.author;
+        let { leaveMessage = getLang("defaultLeaveMessage") } = threadData.data || {};  
+        
+        const session =  
+            currentHour <= 10 ? getLang("session1") :  
+            currentHour <= 12 ? getLang("session2") :  
+            currentHour <= 18 ? getLang("session3") :  
+            getLang("session4");
 
-				form.body = leaveMessage;
+        const form = {  
+            mentions: leaveMessage.includes("{userNameTag}") ? [{ tag: userName, id: leftParticipantFbId }] : []  
+        };  
 
-				if (leaveMessage.includes("{userNameTag}")) {
-					form.mentions = [{
-						id: leftParticipantFbId,
-						tag: userName
-					}];
-				}
+        leaveMessage = leaveMessage  
+            .replace(/\{userName\}|\{userNameTag\}/g, userName)  
+            .replace(/\{type\}/g, isKicked ? getLang("leaveType2") : getLang("leaveType1"))  
+            .replace(/\{threadName\}|\{boxName\}/g, threadName)  
+            .replace(/\{time\}/g, timeNow)  
+            .replace(/\{session\}/g, session);  
 
-				if (threadData.data.leaveAttachment) {
-					const files = threadData.data.leaveAttachment;
-					const attachments = files.reduce((acc, file) => {
-						acc.push(drive.getFile(file, "stream"));
-						return acc;
-					}, []);
-					form.attachment = (await Promise.allSettled(attachments))
-						.filter(({ status }) => status == "fulfilled")
-						.map(({ value }) => value);
-				}
-				message.send(form);
-			};
-	}
+        form.body = leaveMessage;  
+
+        try {
+            const gifUrl = isKicked 
+                ? "https://files.catbox.moe/sw8zl7.mp4" // Kicked GIF
+                : "https://files.catbox.moe/ynrban.mp4"; // Leave GIF
+            
+            const attachment = await getStreamFromURL(gifUrl);
+            if (attachment) form.attachment = [attachment];
+        } catch (err) {
+            console.error("Gif error:", err);
+        }
+
+        return message.send(form);  
+    }
 };
