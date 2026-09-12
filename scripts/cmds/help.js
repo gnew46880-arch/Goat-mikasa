@@ -5,7 +5,7 @@ module.exports = {
 	config: {
 		name: "help",
 		aliases: ["menu", "commands"],
-		version: "4.8",
+		version: "5.0",
 		author: "NeoKEX",
 		shortDescription: "Show all available commands",
 		longDescription: "Displays a clean and premium-styled categorized list of commands.",
@@ -16,14 +16,6 @@ module.exports = {
 	onStart: async function ({ message, args, prefix }) {
 		const allCommands = global.GoatBot.commands;
 		const categories = {};
-
-		const emojiMap = {
-			ai: "➥", "ai-image": "➥", group: "➥", system: "➥",
-			fun: "➥", owner: "➥", config: "➥", economy: "➥",
-			media: "➥", "18+": "➥", tools: "➥", utility: "➥",
-			info: "➥", image: "➥", game: "➥", admin: "➥",
-			rank: "➥", boxchat: "➥", others: "➥"
-		};
 
 		const cleanCategoryName = (text) => {
 			if (!text) return "others";
@@ -41,12 +33,12 @@ module.exports = {
 			categories[cat].push(cmd.config.name);
 		}
 
-
 		if (args[0]) {
 			const query = args[0].toLowerCase();
 			const cmd =
 				allCommands.get(query) ||
 				[...allCommands.values()].find((c) => (c.config.aliases || []).includes(query));
+			
 			if (!cmd) return message.reply(`❌ Command "${query}" not found.`);
 
 			const {
@@ -57,47 +49,44 @@ module.exports = {
 				category,
 				shortDescription,
 				longDescription,
-				aliases,
-				role 
+				aliases
 			} = cmd.config;
 
-			const desc =
-				typeof longDescription === "string"
-					? longDescription
-					: longDescription?.en || shortDescription?.en || shortDescription || "No description";
-
-			const usage =
-				typeof guide === "string"
-					? guide.replace(/{pn}/g, prefix)
-					: guide?.en?.replace(/{pn}/g, prefix) || `${prefix}${name}`;
-
-						const requiredRole = cmd.config.role !== undefined ? cmd.config.role : 0; 
+			const desc = typeof longDescription === "string" ? longDescription : (longDescription?.en || shortDescription?.en || shortDescription || "No description");
+			const usage = typeof guide === "string" ? guide.replace(/{pn}/g, prefix) : (guide?.en?.replace(/{pn}/g, prefix) || `${prefix}${name}`);
+			const requiredRole = cmd.config.role !== undefined ? cmd.config.role : 0; 
 
 			return message.reply(
-				`☠️ 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗜𝗡𝗙𝗢 ☠️\n\n` +
-				`➥ Name: ${name}\n` +
-				`➥ Category: ${category || "Uncategorized"}\n` +
-				`➥ Description: ${desc}\n` +
-				`➥ Aliases: ${aliases?.length ? aliases.join(", ") : "None"}\n` +
-				`➥ Usage: ${usage}\n` +
-				`➥ Permission: ${requiredRole}\n` + 
-				`➥ Author: ${author}\n` +
-				`➥ Version: ${version}`
+				`⛩️ ——— 『 𝗖𝗠𝗗 𝗗𝗘𝗧𝗔𝗜𝗟𝗦 』 ——— ⛩️\n` +
+				`━━━━━━━━━━━━━━━━━━━━━\n` +
+				`┃ ✧ 𝐍𝐚𝐦𝐞: ${name}\n` +
+				`┃ ✧ 𝐕𝐞𝐫𝐬𝐢𝐨𝐧: ${version}\n` +
+				`┃ ✧ 𝐂𝐚𝐭𝐞𝐠𝐨𝐫𝐲: ${category.toUpperCase()}\n` +
+				`┃ ✧ 𝐏𝐞𝐫𝐦𝐢𝐬𝐬𝐢𝐨𝐧: ${requiredRole === 0 ? "User" : requiredRole === 1 ? "Admin" : "Owner"}\n` +
+				`┃ ✧ 𝐀𝐥𝐢𝐚𝐬𝐞𝐬: ${aliases?.length ? aliases.join(", ") : "None"}\n` +
+				`┃ ✧ 𝐃𝐞𝐬𝐜𝐫𝐢𝐩𝐭𝐢𝐨𝐧: ${desc}\n` +
+				`┃ ✧ 𝐔𝐬𝐚𝐠𝐞: ${usage}\n` +
+				`━━━━━━━━━━━━━━━━━━━━━\n` +
+				`┃ ✧ 𝐀𝐮𝐭𝐡𝐨𝐫: ${author}\n` +
+				`┗━━━━━━━━━━━━━━━━━━━━┛`
 			);
 		}
 
-		const formatCommands = (cmds) =>
-			cmds.sort().map((cmd) => `× ${cmd}`);
-
-		let msg = `━━━☠️ 𝗡𝗲𝗼𝗞𝗘𝗫 𝗔𝗜 ☠️━━━\n`;
+		let msg = `🌸 ——— 『 𝗠𝗜𝗞𝗔𝗦𝗔 𝗕𝗢𝗧 』 ——— 🌸\n`;
+		msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
+		
 		const sortedCategories = Object.keys(categories).sort();
 		for (const cat of sortedCategories) {
-			const emoji = emojiMap[cat] || "➥";
-			msg += `\n╭──『 ${cat.toUpperCase()} 』\n`; 
-			msg += `${formatCommands(categories[cat]).join(' ')}\n`; 
-			msg += `╰────────────◊\n`;
+			const capitalizedCat = cat.charAt(0).toUpperCase() + cat.slice(1);
+			msg += `\n┏━━━  ｢ ${capitalizedCat} ｣\n`; 
+			msg += `┃ ${categories[cat].sort().map(item => `• ${item}`).join('\n┃ ')}\n`;
+			msg += `┗━━━━━━━━━━━━━━━━━━◇\n`;
 		}
-		msg += `\n➥ Use: ${prefix}help [command name] for details\n➥Use: ${prefix}callad to talk with bot admins '_'`;
+
+		msg += `\n━━━━━━━━━━━━━━━━━━━━━\n`;
+		msg += `📝 𝐓𝐨𝐭𝐚𝐥 𝐂𝐨𝐦𝐦𝐚𝐧𝐝𝐬: ${allCommands.size}\n`;
+		msg += `💡 𝐔𝐬𝐞: ${prefix}help [name] for info\n`;
+		msg += `📬 𝐔𝐬𝐞: ${prefix}callad for support`;
 
 		return message.reply(msg);
 	}
